@@ -8,6 +8,9 @@ ubuntu-1
 [mx]
 ubuntu-1
 
+[openid]
+ubuntu-1
+
 [test:vars]
 ansible_connection=ssh
 ansible_ssh_user=ubuntu
