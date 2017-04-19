@@ -1,0 +1,33 @@
+---
+- hosts: mx
+  tasks:
+  - git:
+      repo: 'https://github.com/yottatsa/postfix-mail-gateway'
+      dest: /opt/postfix-mail-gateway
+      update: yes
+    register: pmg_rev
+  - docker_image:
+     path: /opt/postfix-mail-gateway
+     name: postfix-mail-gateway
+     tag: "{{ pmg_rev.after }}"
+  - file:
+      path: /etc/postfix
+      state: directory
+  - template:
+      src: virtual.j2
+      dest: /etc/postfix/virtual
+  - docker_container:
+      name: postfix-mail-gateway
+      image: "postfix-mail-gateway:{{ pmg_rev.after }}"
+      state: started
+      recreate: yes
+      network_mode: host
+      volumes:
+        # - /etc/letsencrypt/live/mx.yottatsa.name:/etc/postfix/ssl:ro
+        # - /etc/letsencrypt/archive:/etc/archive:ro
+        - /dev:/dev:ro
+        - /run/systemd/journal:/run/systemd/journal:ro
+        - /etc/ssl:/etc/ssl:ro
+        - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
+        - /etc/postfix/virtual:/etc/postfix/virtual:ro
+        - /var/mail:/var/mail:rw

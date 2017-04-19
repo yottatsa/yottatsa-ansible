@@ -1,0 +1,36 @@
+---
+- hosts: all
+  tasks:
+  - lineinfile:
+      path: /etc/hosts
+      regexp: '^127\.0\.0\.1'
+      line: '127.0.0.1 localhost {{ ansible_nodename }}'
+  - package:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+    - sudo
+    - openssh-server
+    - git
+    - ca-certificates
+  - lineinfile:
+      path: /etc/sudoers
+      regexp: '^%sudo'
+      line: '%sudo ALL=(ALL) NOPASSWD:ALL'
+  - user:
+      name: yottatsa
+      shell: /bin/bash
+      groups: sudo
+      append: yes
+
+- hosts: dockers
+  tasks:
+  - package:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+    - docker.io
+    - python3-docker
+  - docker_container:
+      name: ohno
+      state: absent
