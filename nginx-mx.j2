@@ -1,0 +1,20 @@
+server {
+	listen       80;
+	server_name  mx.yottatsa.name;
+#	rewrite ^ https://$http_host$request_uri? permanent;
+#}
+#
+#server {
+#	listen 443;
+#	server_name  mx.yottatsa.name;
+#	ssl on;
+#	ssl_certificate /etc/letsencrypt/live/mx.yottatsa.name/fullchain.pem;
+#	ssl_certificate_key /etc/letsencrypt/live/mx.yottatsa.name/privkey.pem;
+#   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+   server_tokens off;
+
+	location / {
+            root   /var/www/mx.yottatsa.name;
+            index  index.html index.htm;
+   }
+}

@@ -1,0 +1,53 @@
+---
+- hosts: web
+  tasks:
+  - file:
+      path: /etc/nginx/conf.d
+      state: directory
+  - git:
+      repo: 'https://github.com/yottatsa/ownopenidserver'
+      dest: /opt/ownopenidserver
+      update: yes
+    register: img_rev
+  - docker_image:
+     path: /opt/ownopenidserver
+     name: ownopenidserver
+     tag: "{{ img_rev.after }}"
+  - docker_container:
+      name: ownopenidserver
+      image: "ownopenidserver:{{ img_rev.after }}"
+      state: started
+      recreate: yes
+      network_mode: host
+  - git:
+      repo: 'https://github.com/yottatsa/yottatsa.github.io'
+      dest: /opt/yottatsaname
+      update: yes
+    register: img_rev
+  - docker_image:
+     path: /opt/yottatsaname
+     name: yottatsaname
+     tag: "{{ img_rev.after }}"
+  - file:
+      path: /etc/nginx/conf.d
+      state: directory
+  - template:
+      src: nginx-yottatsaname.j2
+      dest: /etc/nginx/conf.d/10-yottatsaname.conf
+  - docker_container:
+      name: yottatsaname
+      image: "yottatsaname:{{ img_rev.after }}"
+  - template:
+      src: nginx.j2
+      dest: /etc/nginx/conf.d/00-nginx.conf
+  - docker_container:
+      name: nginx
+      image: "nginx:latest"
+      state: started
+      recreate: yes
+      network_mode: host
+      volumes:
+        - /etc/letsencrypt:/etc/letsencrypt:ro
+        - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
+      volumes_from:
+        - yottatsaname

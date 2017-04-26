@@ -5,10 +5,10 @@ ubuntu-2 ansible_host=172.18.184.128
 [dockers]
 ubuntu-1
 
-[mx]
+[web]
 ubuntu-1
 
-[openid]
+[mx]
 ubuntu-1
 
 [test:vars]

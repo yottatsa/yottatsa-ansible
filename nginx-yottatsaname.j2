@@ -1,0 +1,57 @@
+server {
+	listen       80;
+	server_name  yottatsa.name www.yottatsa.name;
+#    server_tokens off;
+#
+#        location /robots.txt {
+#            root   /var/www/yottatsa.name;
+#	}
+#        location / {
+#		rewrite ^ https://yottatsa.name$request_uri? permanent;
+#	}
+#}
+#
+#server {
+#	listen 443;
+#	server_name  www.yottatsa.name;
+#	ssl on;
+#	ssl_certificate /etc/letsencrypt/live/yottatsa.name/fullchain.pem;
+#	ssl_certificate_key /etc/letsencrypt/live/yottatsa.name/privkey.pem;
+#   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+#   server_tokens off;
+#	rewrite ^ https://yottatsa.name$request_uri? permanent;
+#}
+#
+#server {
+#	listen 443;
+#	server_name  yottatsa.name;
+#	ssl on;
+#	ssl_certificate /etc/letsencrypt/live/yottatsa.name/fullchain.pem;
+#	ssl_certificate_key /etc/letsencrypt/live/yottatsa.name/privkey.pem;
+#   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+    server_tokens off;
+
+	location / {
+            root   /var/www/yottatsa.name;
+            index  index.html index.htm;
+        }
+
+	location /endpoint {
+		uwsgi_pass  127.0.0.1:3031;
+		include /etc/nginx/uwsgi_params;
+	}
+	location /account {
+		uwsgi_pass  127.0.0.1:3031;
+		include /etc/nginx/uwsgi_params;
+	}
+	location /yadis.xrds {
+		uwsgi_pass  127.0.0.1:3031;
+		include /etc/nginx/uwsgi_params;
+	}
+	location /openidserver {
+		uwsgi_pass  127.0.0.1:3031;
+		include /etc/nginx/uwsgi_params;
+		uwsgi_param SCRIPT_NAME /openidserver;
+		uwsgi_modifier1 30;
+	}
+}
