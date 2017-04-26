@@ -1,9 +1,6 @@
 ---
 - hosts: web
   tasks:
-  - file:
-      path: /etc/nginx/conf.d
-      state: directory
   - git:
       repo: 'https://github.com/yottatsa/ownopenidserver'
       dest: /opt/ownopenidserver
@@ -28,9 +25,6 @@
      path: /opt/yottatsaname
      name: yottatsaname
      tag: "{{ img_rev.after }}"
-  - file:
-      path: /etc/nginx/conf.d
-      state: directory
   - template:
       src: nginx-yottatsaname.j2
       dest: /etc/nginx/conf.d/10-yottatsaname.conf

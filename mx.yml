@@ -13,12 +13,6 @@
   - file:
       path: /etc/postfix
       state: directory
-  - file:
-      path: /etc/nginx/conf.d
-      state: directory
-  - template:
-      src: nginx-mx.j2
-      dest: /etc/nginx/conf.d/11-mx.conf
   - template:
       src: virtual.j2
       dest: /etc/postfix/virtual
@@ -37,3 +31,6 @@
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/postfix/virtual:/etc/postfix/virtual:ro
         - /var/mail:/var/mail:rw
+  - template:
+      src: nginx-mx.j2
+      dest: /etc/nginx/conf.d/11-mx.conf

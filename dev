@@ -4,12 +4,15 @@ ubuntu-2 ansible_host=172.18.184.128
 
 [dockers]
 ubuntu-1
+ubuntu-2
 
 [web]
 ubuntu-1
+ubuntu-2
 
 [mx]
 ubuntu-1
+ubuntu-2
 
 [test:vars]
 ansible_connection=ssh
