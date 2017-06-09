@@ -16,6 +16,9 @@
   - template:
       src: virtual.j2
       dest: /etc/postfix/virtual
+  - template:
+      src: smime.crt
+      dest: /etc/postfix/smime.crt
   - docker_container:
       name: postfix-mail-gateway
       image: "postfix-mail-gateway:{{ img_rev.after }}"
@@ -23,14 +26,20 @@
       recreate: yes
       network_mode: host
       volumes:
-        # - /etc/letsencrypt/live/mx.yottatsa.name:/etc/postfix/ssl:ro
-        # - /etc/letsencrypt/archive:/etc/archive:ro
+        - /etc/letsencrypt/live/mx.yottatsa.name:/etc/postfix/ssl:ro
+        - /etc/letsencrypt/archive:/etc/archive:ro
         - /dev:/dev:ro
         - /run/systemd/journal:/run/systemd/journal:ro
         - /etc/ssl:/etc/ssl:ro
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/postfix/virtual:/etc/postfix/virtual:ro
+        - /etc/postfix/smime.crt:/etc/postfix/smime.crt:ro
         - /var/mail:/var/mail:rw
   - template:
       src: nginx-mx.j2
       dest: /etc/nginx/conf.d/11-mx.conf
+  - cron:
+      minute: "0"
+      hour: "0"
+      weekday: "sat"
+      job: "savelog -c 52 -j /var/mail/root"

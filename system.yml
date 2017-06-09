@@ -13,6 +13,11 @@
     - openssh-server
     - git
     - ca-certificates
+    - iptables
+  - template:
+      src: firewall.j2
+      dest: /etc/network/if-up.d/firewall
+      mode: 0755
   - lineinfile:
       path: /etc/sudoers
       regexp: '^%sudo'
@@ -22,6 +27,26 @@
       shell: /bin/bash
       groups: sudo
       append: yes
+  - template:
+      src: dnsmasq.j2
+      dest: /etc/dnsmasq.conf
+  - package:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+    - rsyslog
+    - dnsmasq
+    - mutt
+    - vim
+    - savelog
+  - package:
+      name: "{{ item }}"
+      state: absent
+    with_items:
+    - postfix
+  - file:
+      path: /etc/nginx/conf.d
+      state: directory
 
 - hosts: dockers
   tasks:
@@ -34,28 +59,3 @@
   - docker_container:
       name: ohno
       state: absent
-
-- hosts: mx
-  tasks:
-  - template:
-      src: dnsmasq.j2
-      dest: /etc/dnsmasq.conf
-  - package:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-    - rsyslog
-    - dnsmasq
-    - mutt
-    - vim
-  - package:
-      name: "{{ item }}"
-      state: absent
-    with_items:
-    - postfix
-
-- hosts: web
-  tasks:
-  - file:
-      path: /etc/nginx/conf.d
-      state: directory

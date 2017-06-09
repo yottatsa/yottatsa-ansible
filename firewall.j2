@@ -1,0 +1,39 @@
+#!/bin/sh
+
+/sbin/iptables-restore <<EOF
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i eth0 -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name DEFAULT --mask 255.255.255.255 --rsource
+-A INPUT -i eth0 -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --name DEFAULT --mask 255.255.255.255 --rsource -j DROP
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 25 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 465 -j ACCEPT
+COMMIT
+EOF
+
+/sbin/ip6tables-restore <<EOF
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p icmpv6 -j ACCEPT
+-A INPUT -s fe80::/10 -j ACCEPT
+-A INPUT -d ff00::/8 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 25 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 465 -j ACCEPT
+COMMIT
+EOF
