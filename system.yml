@@ -27,26 +27,6 @@
       shell: /bin/bash
       groups: sudo
       append: yes
-  - template:
-      src: dnsmasq.j2
-      dest: /etc/dnsmasq.conf
-  - package:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-    - rsyslog
-    - dnsmasq
-    - mutt
-    - vim
-    - savelog
-  - package:
-      name: "{{ item }}"
-      state: absent
-    with_items:
-    - postfix
-  - file:
-      path: /etc/nginx/conf.d
-      state: directory
 
 - hosts: dockers
   tasks:
