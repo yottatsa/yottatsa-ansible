@@ -1,0 +1,39 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: key
+      digital_ocean:
+        state: present
+        command: ssh
+        name: "yottatsa@Vladimirs-MacBook-Air.local"
+        ssh_pub_key: "{{ lookup('file', 'authorized_keys') }}"
+      register: key
+    - name: instance
+      digital_ocean:
+        state: present
+        command: droplet
+        name: mx.yottatsa.name
+        size_id: 512mb
+        image_id: ubuntu-16.04.2-x64
+        region_id: ams2
+        # Customize this for your account.
+        ssh_key_ids: "{{ key.ssh_key.id }}"
+        # Required for idempotence/only one droplet creation.
+        unique_name: yes
+        ipv6: yes
+      register: do
+    - add_host:
+        name: "{{ do.droplet.name }}"
+        groups: do, dockers, web, mx
+      when: do.droplet is defined
+
+- hosts: do
+  remote_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Wait for port 22 to become available.
+      local_action: "wait_for port=22 host={{ inventory_hostname }}"

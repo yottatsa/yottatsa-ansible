@@ -1,3 +1,5 @@
 *.crt
 *.swp
 *.retry
+prep.*
+authorized_keys
