@@ -10,12 +10,17 @@
      path: /opt/ownopenidserver
      name: ownopenidserver
      tag: "{{ img_rev.after }}"
+  - file:
+      path: /var/openidserver
+      state: directory
   - docker_container:
       name: ownopenidserver
       image: "ownopenidserver:{{ img_rev.after }}"
       state: started
       recreate: yes
       network_mode: host
+      volumes:
+        - /var/openidserver:/opt/openidserver/sstore
   - git:
       repo: 'https://github.com/yottatsa/yottatsa.github.io'
       dest: /opt/yottatsaname
