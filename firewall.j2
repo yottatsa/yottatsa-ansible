@@ -11,7 +11,7 @@
 -A INPUT -i eth0 -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --name DEFAULT --mask 255.255.255.255 --rsource -j DROP
 -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
--A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p udp -m udp -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 25 -j ACCEPT
@@ -30,7 +30,7 @@ EOF
 -A INPUT -d ff00::/8 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
--A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p udp -m udp -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 25 -j ACCEPT

@@ -1,5 +1,5 @@
 *.crt
 *.swp
 *.retry
-prep.*
+activate
 authorized_keys

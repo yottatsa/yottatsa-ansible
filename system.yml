@@ -14,10 +14,12 @@
     - git
     - ca-certificates
     - iptables
+    - mosh
   - template:
       src: firewall.j2
       dest: /etc/network/if-up.d/firewall
       mode: 0755
+  - shell: /etc/network/if-up.d/firewall
   - lineinfile:
       path: /etc/sudoers
       regexp: '^%sudo'
