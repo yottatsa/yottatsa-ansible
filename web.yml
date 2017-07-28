@@ -16,11 +16,15 @@
   - docker_container:
       name: ownopenidserver
       image: "ownopenidserver:{{ img_rev.after }}"
-      state: started
       recreate: yes
       network_mode: host
       volumes:
         - /var/openidserver:/opt/openidserver/sstore
+      state: started
+      log_driver: syslog
+      log_options:
+        syslog-facility: daemon
+        tag: ownopenidserver
   - git:
       repo: 'https://github.com/yottatsa/yottatsa.github.io'
       dest: /opt/yottatsaname
@@ -42,11 +46,15 @@
   - docker_container:
       name: nginx
       image: "nginx:latest"
-      state: started
       recreate: yes
       network_mode: host
       volumes:
+        - /var/www/mx.yottatsa.name
         - /etc/letsencrypt:/etc/letsencrypt:ro
         - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
       volumes_from:
         - yottatsaname
+      log_driver: syslog
+      log_options:
+        syslog-facility: daemon
+        tag: nginx

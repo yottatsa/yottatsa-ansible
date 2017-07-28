@@ -1,0 +1,18 @@
+---
+- hosts: web
+  tasks:
+  - docker_container:
+      name: certbot
+      image: "certbot/certbot"
+      network_mode: host
+      volumes_from:
+        - nginx
+      volumes:
+        - /etc/letsencrypt:/etc/letsencrypt:rw
+        - /var/lib/letsencrypt:/var/lib/letsencrypt:rw
+      command: renew --webroot
+      detach: False
+      cleanup: True
+    register: renew
+  - debug: msg="{{ renew['ansible_facts']['docker_container']['Output'].split('\n') }}" 
+

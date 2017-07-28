@@ -42,7 +42,6 @@
   - docker_container:
       name: postfix-mail-gateway
       image: "postfix-mail-gateway:{{ img_rev.after }}"
-      state: started
       recreate: yes
       network_mode: host
       volumes:
