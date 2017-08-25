@@ -57,6 +57,7 @@
         - /etc/postfix/smime.crt:/etc/postfix/smime.crt:ro
         - /var/mail:/var/mail:rw
   - cron:
+      name: 'savemail'
       minute: "0"
       hour: "0"
       weekday: "sat"
