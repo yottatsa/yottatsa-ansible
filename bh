@@ -1,0 +1,16 @@
+[dh]
+secure.yottatsa.name
+
+[dockers]
+secure.yottatsa.name
+
+[web]
+secure.yottatsa.name
+
+[mx]
+secure.yottatsa.name
+
+[dh:vars]
+ansible_connection=ssh
+ansible_ssh_user=root
+ansible_python_interpreter=/usr/bin/python3
