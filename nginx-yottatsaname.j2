@@ -1,6 +1,6 @@
 server {
 	listen       80;
-	server_name  yottatsa.name www.yottatsa.name;
+	server_name  yottatsa.name www.yottatsa.name {{ fqdn }};
     server_tokens off;
 
         location /robots.txt {
@@ -13,10 +13,10 @@ server {
 
 server {
 	listen 443;
-	server_name  www.yottatsa.name;
+	server_name  www.yottatsa.name {{ fqdn }};
 	ssl on;
-	ssl_certificate /etc/letsencrypt/live/yottatsa.name/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/yottatsa.name/privkey.pem;
+	ssl_certificate /etc/letsencrypt/live/{{ fqdn }}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{ fqdn }}/privkey.pem;
    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
    server_tokens off;
 	rewrite ^ https://yottatsa.name$request_uri? permanent;
@@ -26,8 +26,8 @@ server {
 	listen 443;
 	server_name  yottatsa.name;
 	ssl on;
-	ssl_certificate /etc/letsencrypt/live/yottatsa.name/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/yottatsa.name/privkey.pem;
+	ssl_certificate /etc/letsencrypt/live/{{ fqdn }}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{ fqdn }}/privkey.pem;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
     server_tokens off;
 

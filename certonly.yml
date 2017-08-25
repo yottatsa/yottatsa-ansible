@@ -1,18 +1,19 @@
 ---
 - hosts: web
   tasks:
+  - set_fact:
+      fqdn: '{{ ansible_nodename.split(".")[0] }}.yottatsa.name'
   - docker_container:
       name: certbot
       image: "certbot/certbot"
       network_mode: host
-      volumes_from:
-        - nginx
       volumes:
         - /etc/letsencrypt:/etc/letsencrypt:rw
         - /var/lib/letsencrypt:/var/lib/letsencrypt:rw
         - /var/log/letsencrypt:/var/log/letsencrypt:rw
-      command: renew --webroot
+      command: certonly --standalone -d {{ fqdn }} -d yottatsa.name -d www.yottatsa.name --expand --force-renewal
       detach: False
       cleanup: True
     register: certbot
   - debug: msg="{{ certbot['ansible_facts']['docker_container']['Output'].split('\n') }}" 
+

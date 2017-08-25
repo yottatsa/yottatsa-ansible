@@ -1,10 +1,24 @@
 ---
 - hosts: all
   tasks:
+  - set_fact:
+      hostname: '{{ ansible_nodename.split(".")[0] }}'
+      fqdn: '{{ ansible_nodename.split(".")[0] }}.yottatsa.name'
+  - hostname:
+      name: '{{ fqdn }}'
+  - copy:
+      dest: /etc/hostname
+      content: '{{ fqdn }}'
+  - lineinfile:
+      path: /etc/hosts
+      regexp: '^127\.0\.1\.1'
+      line: '127.0.1.1 {{ fqdn }} {{ hostname }}'
   - lineinfile:
       path: /etc/hosts
       regexp: '^127\.0\.0\.1'
-      line: '127.0.0.1 localhost {{ ansible_nodename }}'
+      line: '127.0.0.1 localhost'
+  - apt:
+      update_cache: yes
   - package:
       name: "{{ item }}"
       state: latest
@@ -15,6 +29,14 @@
     - ca-certificates
     - iptables
     - mosh
+  - lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^AllowUsers'
+      line: 'AllowUsers root'
+  - lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PasswordAuthentication'
+      line: 'PasswordAuthentication no'
   - template:
       src: firewall.j2
       dest: /etc/network/if-up.d/firewall
@@ -29,6 +51,9 @@
       shell: /bin/bash
       groups: sudo
       append: yes
+  - service:
+      name: ssh
+      state: restarted
 
 - hosts: dockers
   tasks:

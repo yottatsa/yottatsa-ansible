@@ -1,6 +1,8 @@
 ---
 - hosts: web
   tasks:
+  - set_fact:
+      fqdn: '{{ ansible_nodename.split(".")[0] }}.yottatsa.name'
   - git:
       repo: 'https://github.com/yottatsa/ownopenidserver'
       dest: /opt/ownopenidserver
@@ -10,9 +12,6 @@
      path: /opt/ownopenidserver
      name: ownopenidserver
      tag: "{{ img_rev.after }}"
-  - file:
-      path: /var/openidserver
-      state: directory
   - docker_container:
       name: ownopenidserver
       image: "ownopenidserver:{{ img_rev.after }}"
@@ -34,22 +33,25 @@
      path: /opt/yottatsaname
      name: yottatsaname
      tag: "{{ img_rev.after }}"
+  - file:
+      path: /etc/nginx/conf.d
+      state: directory
+  - template:
+      src: nginx.j2
+      dest: /etc/nginx/conf.d/00-nginx.conf
   - template:
       src: nginx-yottatsaname.j2
       dest: /etc/nginx/conf.d/10-yottatsaname.conf
   - docker_container:
       name: yottatsaname
       image: "yottatsaname:{{ img_rev.after }}"
-  - template:
-      src: nginx.j2
-      dest: /etc/nginx/conf.d/00-nginx.conf
   - docker_container:
       name: nginx
       image: "nginx:latest"
       recreate: yes
       network_mode: host
       volumes:
-        - /var/www/mx.yottatsa.name
+        - '/var/www/{{ fqdn }}'
         - /etc/letsencrypt:/etc/letsencrypt:ro
         - /etc/nginx/conf.d:/etc/nginx/conf.d:ro
       volumes_from:

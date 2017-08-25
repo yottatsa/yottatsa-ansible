@@ -1,6 +1,8 @@
 ---
 - hosts: mx
   tasks:
+  - set_fact:
+      fqdn: '{{ ansible_nodename.split(".")[0] }}.yottatsa.name'
   - template:
       src: dnsmasq.j2
       dest: /etc/dnsmasq.conf
@@ -45,7 +47,7 @@
       recreate: yes
       network_mode: host
       volumes:
-        - /etc/letsencrypt/live/mx.yottatsa.name:/etc/postfix/ssl:ro
+        - /etc/letsencrypt/live/{{ fqdn }}:/etc/postfix/ssl:ro
         - /etc/letsencrypt/archive:/etc/archive:ro
         - /dev:/dev:ro
         - /run/systemd/journal:/run/systemd/journal:ro
@@ -54,9 +56,6 @@
         - /etc/postfix/virtual:/etc/postfix/virtual:ro
         - /etc/postfix/smime.crt:/etc/postfix/smime.crt:ro
         - /var/mail:/var/mail:rw
-  - template:
-      src: nginx-mx.j2
-      dest: /etc/nginx/conf.d/11-mx.conf
   - cron:
       minute: "0"
       hour: "0"
