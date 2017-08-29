@@ -25,6 +25,7 @@
     with_items:
     - sudo
     - openssh-server
+    - mosh
     - git
     - ca-certificates
     - iptables
