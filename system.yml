@@ -24,6 +24,7 @@
       state: latest
     with_items:
     - sudo
+    - make
     - openssh-server
     - mosh
     - git

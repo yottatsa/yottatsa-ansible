@@ -55,10 +55,36 @@
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/postfix/virtual:/etc/postfix/virtual:ro
         - /etc/postfix/smime.crt:/etc/postfix/smime.crt:ro
-        - /var/mail:/var/mail:rw
-  - cron:
-      name: 'savemail'
-      minute: "0"
-      hour: "0"
-      weekday: "sat"
-      job: "savelog -c 52 -j /var/mail/root"
+        - /root/Maildir:/root/Maildir:rw
+        - /home/yottatsa/Maildir:/home/yottatsa/Maildir:rw
+  - git:
+      repo: 'https://github.com/yottatsa/dovecot-mail'
+      dest: /opt/dovecot-mail
+      update: yes
+    register: img_rev
+  - docker_image:
+     path: /opt/dovecot-mail
+     name: dovecot-mail
+     tag: "{{ img_rev.after }}"
+  - file:
+      path: /etc/dovecot
+      state: directory
+  - template:
+      src: users.j2
+      dest: /etc/dovecot/users
+  - docker_container:
+      name: dovecot-mail
+      image: "dovecot-mail:{{ img_rev.after }}"
+      recreate: yes
+      network_mode: host
+      volumes:
+        - /etc/letsencrypt/live/{{ fqdn }}/fullchain.pem:/etc/ssl/dovecot/server.pem:ro
+        - /etc/letsencrypt/live/{{ fqdn }}/privkey.pem:/etc/ssl/dovecot/server.key:ro
+        - /etc/letsencrypt/archive:/etc/archive:ro
+        - /dev:/dev:ro
+        - /run/systemd/journal:/run/systemd/journal:ro
+        - /etc/ssl:/etc/ssl:ro
+        - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
+        - /etc/dovecot/users:/etc/dovecot/users:ro
+        - /home/yottatsa/Maildir:/home/yottatsa/Maildir:rw
+

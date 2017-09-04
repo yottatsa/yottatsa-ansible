@@ -3,3 +3,4 @@
 *.retry
 activate
 authorized_keys
+users.*
