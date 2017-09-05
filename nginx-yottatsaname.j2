@@ -1,5 +1,6 @@
 server {
 	listen       80;
+	listen       [::]:80;
 	server_name  yottatsa.name www.yottatsa.name {{ fqdn }};
     server_tokens off;
 
@@ -13,6 +14,7 @@ server {
 
 server {
 	listen 443;
+	listen [::]:443;
 	server_name  www.yottatsa.name {{ fqdn }};
 	ssl on;
 	ssl_certificate /etc/letsencrypt/live/{{ fqdn }}/fullchain.pem;
@@ -24,6 +26,7 @@ server {
 
 server {
 	listen 443;
+	listen [::]:443;
 	server_name  yottatsa.name;
 	ssl on;
 	ssl_certificate /etc/letsencrypt/live/{{ fqdn }}/fullchain.pem;
