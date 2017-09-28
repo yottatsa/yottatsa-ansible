@@ -39,7 +39,7 @@
       src: virtual.j2
       dest: /etc/postfix/virtual
   - template:
-      src: smime.crt
+      src: private/smime.crt
       dest: /etc/postfix/smime.crt
   - docker_container:
       name: postfix-mail-gateway

@@ -4,3 +4,5 @@
 activate
 authorized_keys
 users.*
+virtual.*
+private

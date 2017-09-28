@@ -9,7 +9,7 @@
         state: present
         command: ssh
         name: "yottatsa@Vladimirs-MacBook-Air.local"
-        ssh_pub_key: "{{ lookup('file', 'authorized_keys') }}"
+        ssh_pub_key: "{{ lookup('file', 'private/authorized_keys') }}"
       register: key
     - name: instance
       digital_ocean:
