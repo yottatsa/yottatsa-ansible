@@ -1,8 +1,11 @@
 ---
 - hosts: web
+  vars_files:
+    - vars.yml
+    - private/vars.yml
   tasks:
   - set_fact:
-      fqdn: '{{ ansible_nodename.split(".")[0] }}.yottatsa.name'
+      fqdn: '{{ ansible_nodename.split(".")[0] }}.{{ server_domain }}'
   - git:
       repo: 'https://github.com/yottatsa/ownopenidserver'
       dest: /opt/ownopenidserver

@@ -1,8 +1,4 @@
-*.crt
 *.swp
 *.retry
 activate
-authorized_keys
-users.*
-virtual.*
-private
+private/*

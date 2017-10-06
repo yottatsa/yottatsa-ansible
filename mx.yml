@@ -1,8 +1,11 @@
 ---
 - hosts: mx
+  vars_files:
+    - vars.yml
+    - private/vars.yml
   tasks:
   - set_fact:
-      fqdn: '{{ ansible_nodename.split(".")[0] }}.yottatsa.name'
+      fqdn: '{{ ansible_nodename.split(".")[0] }}.{{ server_domain }}'
   - template:
       src: dnsmasq.j2
       dest: /etc/dnsmasq.conf
@@ -36,7 +39,7 @@
       path: /etc/postfix
       state: directory
   - template:
-      src: virtual.j2
+      src: private/mx_virtual
       dest: /etc/postfix/virtual
   - template:
       src: private/smime.crt
@@ -70,7 +73,7 @@
       path: /etc/dovecot
       state: directory
   - template:
-      src: users.j2
+      src: private/mx_users
       dest: /etc/dovecot/users
   - docker_container:
       name: dovecot-mail
@@ -87,4 +90,3 @@
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/dovecot/users:/etc/dovecot/users:ro
         - /home/yottatsa/Maildir:/home/yottatsa/Maildir:rw
-

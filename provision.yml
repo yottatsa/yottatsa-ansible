@@ -2,20 +2,24 @@
 - hosts: localhost
   connection: local
   gather_facts: false
-
+  vars_files:
+    - vars.yml
+    - private/vars.yml
   tasks:
+    - local_action: command hostname
+      register: hostname
     - name: key
       digital_ocean:
         state: present
         command: ssh
-        name: "yottatsa@Vladimirs-MacBook-Air.local"
-        ssh_pub_key: "{{ lookup('file', 'private/authorized_keys') }}"
+        name: "{{ lookup('env', 'USER') }}@{{ hostname.stdout }}"
+        ssh_pub_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
       register: key
     - name: instance
       digital_ocean:
         state: present
         command: droplet
-        name: mx.yottatsa.name
+        name: 'mx.{{ server_domain }}'
         size_id: 512mb
         image_id: ubuntu-16.04.2-x64
         region_id: ams2
