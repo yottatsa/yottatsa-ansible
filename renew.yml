@@ -11,7 +11,7 @@
         - /etc/letsencrypt:/etc/letsencrypt:rw
         - /var/lib/letsencrypt:/var/lib/letsencrypt:rw
         - /var/log/letsencrypt:/var/log/letsencrypt:rw
-      command: renew --webroot
+      command: renew --webroot --force-renewal --webroot-path /var/www/yottatsa.name
       detach: False
       cleanup: True
     register: certbot
