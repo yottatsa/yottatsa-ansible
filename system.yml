@@ -2,7 +2,6 @@
 - hosts: all
   vars_files:
     - vars.yml
-    - private/vars.yml
   tasks:
   - set_fact:
       hostname: '{{ ansible_nodename.split(".")[0] }}'
@@ -26,69 +25,13 @@
       name: "{{ item }}"
       state: latest
     with_items:
-    - libpam-yubico
-    - sudo
     - make
-    - openssh-server
     - mosh
     - git
     - ca-certificates
-    - iptables
-    - mosh
-  - lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^AllowUsers'
-      line: 'AllowUsers root'
-  - lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^PasswordAuthentication'
-      line: 'PasswordAuthentication no'
-  - lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^PasswordAuthentication'
-      line: 'PasswordAuthentication no'
-  - lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^ChallengeResponseAuthentication'
-      line: 'ChallengeResponseAuthentication yes'
-  - lineinfile:
-      path: /etc/ssh/sshd_config
-      regexp: '^AuthenticationMethods'
-      line: 'AuthenticationMethods publickey,keyboard-interactive:pam'
-  - lineinfile:
-      path: /etc/pam.d/common-auth
-      regexp: 'pam_yubico'
-      insertbefore: 'pam_unix'
-      line: 'auth requisite pam_yubico.so mode=client try_first_pass url=http://127.0.0.1:8000/wsapi/2.0/verify?id=%d&otp=%s id={{ yubico_id }} key={{ yubico_key }}'
-  - template:
-      src: firewall.j2
-      dest: /etc/network/if-up.d/firewall
-      mode: 0755
-  - shell: /etc/network/if-up.d/firewall
-  - lineinfile:
-      path: /etc/sudoers
-      regexp: '^%sudo'
-      line: '%sudo ALL=(ALL) NOPASSWD:ALL'
-  - user:
-      name: '{{ server_user }}'
-      shell: /bin/bash
-      groups: sudo
-      append: yes
   - service:
       name: ssh
       state: restarted
-  - file:
-      path: /root/.ssh
-      state: directory
-  - file:
-      path: /root/.yubico
-      state: directory
-  - template:
-      src: private/authorized_keys
-      dest: /root/.ssh/authorized_keys
-  - template:
-      src: private/authorized_yubikeys
-      dest: /root/.yubico/authorized_yubikeys
 
 - hosts: dockers
   tasks:
