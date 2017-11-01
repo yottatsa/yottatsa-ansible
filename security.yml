@@ -39,7 +39,7 @@
       path: /etc/pam.d/common-auth
       regexp: 'pam_yubico'
       insertbefore: 'pam_unix'
-      line: 'auth requisite pam_yubico.so mode=client try_first_pass url=http://127.0.0.1:8000/wsapi/2.0/verify?id=%d&otp=%s id={{ yubico_id }} key={{ yubico_key }}'
+      line: 'auth requisite pam_yubico.so mode=client try_first_pass id={{ yubico_id }} key={{ yubico_key }}'
   - template:
       src: firewall.j2
       dest: /etc/network/if-up.d/firewall
@@ -67,7 +67,7 @@
   - copy:
       content: |
         #!/bin/sh
-        exec /usr/bin/scrub -X /home/scrub
+        exec /usr/bin/scrub -X /home/scrub | /usr/bin/logger -p security.info -t scrub
 
       dest: /etc/cron.daily/scrub
       owner: root

@@ -2,6 +2,7 @@
 - hosts: all
   vars_files:
     - vars.yml
+    - private/vars.yml
   tasks:
   - set_fact:
       hostname: '{{ ansible_nodename.split(".")[0] }}'
@@ -29,8 +30,18 @@
     - mosh
     - git
     - ca-certificates
+    - rsyslog-gnutls
   - service:
       name: ssh
+      state: restarted
+  - template:
+      src: papertrail.j2
+      dest: /etc/rsyslog.d/99-papertrail.conf
+  - get_url:
+      url: https://papertrailapp.com/tools/papertrail-bundle.pem
+      dest: /etc/papertrail-bundle.pem
+  - service:
+      name: rsyslog
       state: restarted
 
 - hosts: dockers
