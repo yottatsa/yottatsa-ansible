@@ -34,6 +34,27 @@
   - file:
       path: /etc/nginx/conf.d
       state: directory
+  - file:
+      path: /etc/postfix
+      state: directory
+  - copy:
+      content: |
+        {{ server_domain }} {{ server_domain }}
+        {% for u, p in mail_aliases.items() %}
+        {{ u }}@{{ server_domain }} {{ server_user}}/Maildir{{ p }}
+        {% endfor %}
+      dest: /etc/postfix/virtual
+  - copy:
+      content: |
+        {{ mail_smime }}
+      dest: /etc/postfix/smime.crt
+  - file:
+      path: /etc/dovecot
+      state: directory
+  - copy:
+      content: |
+        {{ mail_login }}:{{ mail_password_dovecot }}:1000:1000::/home/{{ server_user }}::userdb_mail=maildir:~/Maildir
+      dest: /etc/dovecot/users
   - git:
       repo: 'https://github.com/yottatsa/postfix-mail-gateway'
       dest: /opt/postfix-mail-gateway
@@ -43,18 +64,6 @@
      path: /opt/postfix-mail-gateway
      name: postfix-mail-gateway
      tag: "{{ img_rev.after }}"
-  - file:
-      path: /etc/postfix
-      state: directory
-  - copy:
-      content: |
-        {{ server_domain }} {{ server_domain }}
-        {% for u, p in mail_aliases.items() %}
-        {{ u }}@{{ server_domain }} {{ server_user}}/Maildir{{ p }}{% endfor %}
-      dest: /etc/postfix/virtual
-  - template:
-      src: private/smime.crt
-      dest: /etc/postfix/smime.crt
   - docker_container:
       name: postfix-mail-gateway
       image: "postfix-mail-gateway:{{ img_rev.after }}"
@@ -80,13 +89,6 @@
      path: /opt/dovecot-mail
      name: dovecot-mail
      tag: "{{ img_rev.after }}"
-  - file:
-      path: /etc/dovecot
-      state: directory
-  - copy:
-      content: |
-        {{ mail_login }}:{{ server_user }}::/home/{{ server_user }}::userdb_mail=maildir:~/Maildir
-      dest: /etc/dovecot/users
   - docker_container:
       name: dovecot-mail
       image: "dovecot-mail:{{ img_rev.after }}"

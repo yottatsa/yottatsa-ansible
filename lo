@@ -1,0 +1,14 @@
+[bh]
+secure.yottatsa.name
+
+[dockers]
+secure.yottatsa.name
+
+[web]
+secure.yottatsa.name
+
+[mx]
+secure.yottatsa.name
+
+[bh:vars]
+ansible_connection=local

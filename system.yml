@@ -13,11 +13,11 @@
       dest: /etc/hostname
       content: '{{ fqdn }}'
   - lineinfile:
-      path: /etc/hosts
+      name: /etc/hosts
       regexp: '^127\.0\.1\.1'
       line: '127.0.1.1 {{ fqdn }} {{ hostname }}'
   - lineinfile:
-      path: /etc/hosts
+      name: /etc/hosts
       regexp: '^127\.0\.0\.1'
       line: '127.0.0.1 localhost'
   - apt:
@@ -51,6 +51,7 @@
       state: latest
     with_items:
     - docker.io
+    - python-docker
     - python3-docker
   - docker_container:
       name: ohno
