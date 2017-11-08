@@ -30,6 +30,7 @@
     - mosh
     - git
     - ca-certificates
+    - rsyslog
     - rsyslog-gnutls
   - service:
       name: ssh

@@ -15,7 +15,8 @@
         - /var/lib/letsencrypt:/var/lib/letsencrypt:rw
         - /var/log/letsencrypt:/var/log/letsencrypt:rw
       command: 'certonly --standalone -d {{ fqdn }} -d {{ server_domain }} -d www.{{ server_domain }} --expand --force-renewal'
-      detach: False
-      cleanup: True
-    register: certbot
-  - debug: msg="{{ certbot['ansible_facts']['docker_container']['Output'].split('\n') }}"
+      detach: True
+      log_driver: syslog
+      log_options:
+        syslog-facility: daemon
+        tag: certbot
