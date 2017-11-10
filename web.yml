@@ -22,8 +22,8 @@
     register: img_rev
   - docker_image:
      path: /opt/ownopenidserver
-     name: ownopenidserver
-     tag: "{{ img_rev.after }}"
+     name: "ownopenidserver:{{ img_rev.after }}"
+     tag: ""
   - docker_container:
       name: ownopenidserver
       image: "ownopenidserver:{{ img_rev.after }}"
@@ -43,8 +43,8 @@
     register: img_rev
   - docker_image:
      path: /opt/yottatsaname
-     name: yottatsaname
-     tag: "{{ img_rev.after }}"
+     name: "yottatsaname:{{ img_rev.after }}"
+     tag: ""
   - docker_container:
       name: yottatsaname
       image: "yottatsaname:{{ img_rev.after }}"
