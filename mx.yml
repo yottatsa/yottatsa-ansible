@@ -90,13 +90,15 @@
     register: img_rev
   - docker_image:
      path: /opt/dovecot-mail
-     name: dovecot-mail
-     tag: "{{ img_rev.after }}"
+     name: "dovecot-mail:{{ img_rev.after }}"
+     tag: ""
   - docker_container:
       name: dovecot-mail
       image: "dovecot-mail:{{ img_rev.after }}"
       recreate: yes
       network_mode: host
+      volumes_from:
+        - postfix-mail-gateway
       volumes:
         - /etc/letsencrypt/live/{{ fqdn }}/fullchain.pem:/etc/ssl/dovecot/server.pem:ro
         - /etc/letsencrypt/live/{{ fqdn }}/privkey.pem:/etc/ssl/dovecot/server.key:ro
