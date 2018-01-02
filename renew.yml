@@ -7,6 +7,7 @@
       network_mode: host
       volumes_from:
         - nginx
+        - yottatsaname
       volumes:
         - /etc/letsencrypt:/etc/letsencrypt:rw
         - /var/lib/letsencrypt:/var/lib/letsencrypt:rw
