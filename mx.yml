@@ -39,8 +39,8 @@
   - copy:
       content: |
         {{ server_domain }} {{ server_domain }}
-        {% for u, p in mail_aliases.items() %}
-        {{ u }}@{{ server_domain }} {{ server_user}}/Maildir{{ p }}
+        {% for u, dest in mail_aliases.items() %}
+        {{ u }}@{{ server_domain }} {{ dest }}
         {% endfor %}
       dest: /etc/postfix/virtual
   - copy:
@@ -108,4 +108,3 @@
         - /etc/ssl:/etc/ssl:ro
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/dovecot/users:/etc/dovecot/users:ro
-        - /home/{{ server_user }}/Maildir:/home/{{ server_user }}/Maildir:rw

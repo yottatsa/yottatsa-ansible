@@ -2,12 +2,12 @@
 server_user: yottatsa
 server_domain: yottatsa.name
 mail_aliases:
-  my: /
-  yottatsa: /
-  me: /
-  subscribe: /.Services/
-  uk: /.Services/
-  us: /.Services/
+  my: yottatsa
+  yottatsa: yottatsa
+  me: yottatsa
+  subscribe: yottatsa+Services
+  uk: yottatsa+Services
+  us: yottatsa+Services
 mail_smime: |
   -----BEGIN CERTIFICATE-----
   MIIFKzCCBBOgAwIBAgIQdhV2Q+g4VzTxlhj/fRdsNjANBgkqhkiG9w0BAQsFADCB
