@@ -30,6 +30,10 @@
       line: 'AllowUsers root'
   - lineinfile:
       name: /etc/ssh/sshd_config
+      regexp: '^DebianBanner'
+      line: 'DebianBanner no'
+  - lineinfile:
+      name: /etc/ssh/sshd_config
       regexp: '^PasswordAuthentication'
       line: 'PasswordAuthentication no'
   - lineinfile:
