@@ -29,6 +29,7 @@
     - make
     - mosh
     - git
+    - gnupg
     - ca-certificates
     - rsyslog
     - rsyslog-gnutls

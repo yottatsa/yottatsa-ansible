@@ -19,6 +19,7 @@
       repo: 'https://github.com/yottatsa/ownopenidserver'
       dest: /opt/ownopenidserver
       update: yes
+      verify_commit: yes
     register: img_rev
   - docker_image:
      path: /opt/ownopenidserver
@@ -40,6 +41,7 @@
       repo: 'https://github.com/yottatsa/yottatsa.github.io'
       dest: /opt/yottatsaname
       update: yes
+      verify_commit: yes
     register: img_rev
   - docker_image:
      path: /opt/yottatsaname
