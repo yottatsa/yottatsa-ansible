@@ -6,17 +6,20 @@
   tasks:
   - set_fact:
       fqdn: '{{ ansible_nodename.split(".")[0] }}.{{ server_domain }}'
+      homedir: '/home/{{ server_user }}'
+      uid: 1000
+      gid: 1000
   - group:
       name: '{{ server_user }}'
-      gid: 1000
+      gid: '{{ gid }}'
   - user:
       name: '{{ server_user }}'
       group: '{{ server_user }}'
       shell: /bin/bash
-      uid: 1000
+      uid: '{{ uid }}'
   - template:
       src: dnsmasq.j2
-      dest: /etc/dnsmasq.conf
+      dest: /etc/dnsmasq.d/mx
   - package:
       name: "{{ item }}"
       state: latest
@@ -52,7 +55,7 @@
       state: directory
   - copy:
       content: |
-        {{ mail_login }}:{{ mail_password_dovecot }}:1000:1000::/home/{{ server_user }}::userdb_mail=maildir:~/Maildir
+        {{ mail_login }}:{{ mail_password_dovecot }}:{{ uid }}:{{ gid }}::{{ homedir }}::userdb_mail=maildir:~/Maildir
       dest: /etc/dovecot/users
   - file:
       path: /etc/letsencrypt/archive
@@ -82,8 +85,6 @@
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/postfix/virtual:/etc/postfix/virtual:ro
         - /etc/postfix/smime.crt:/etc/postfix/smime.crt:ro
-        - /root/Maildir:/root/Maildir:rw
-        - /home/{{ server_user }}/Maildir:/home/{{ server_user }}/Maildir:rw
   - git:
       repo: 'https://github.com/yottatsa/dovecot-mail'
       dest: /opt/dovecot-mail
@@ -110,3 +111,4 @@
         - /etc/ssl:/etc/ssl:ro
         - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
         - /etc/dovecot/users:/etc/dovecot/users:ro
+        - '{{ homedir }}/Maildir:{{ homedir }}/Maildir:rw'

@@ -6,8 +6,9 @@ all: update
 
 pull:
 	git fetch
-	git verify-commit master
+	git verify-commit origin/master
 	git checkout master --force
+	git merge
 
 %: %.yml pull
 	grep -q hosts: $<

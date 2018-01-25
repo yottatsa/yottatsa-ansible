@@ -16,7 +16,6 @@
     - secure-delete
     - scrub
     - libpam-yubico
-    - sudo
     - openssh-server
     - iptables
   - template:
@@ -49,10 +48,6 @@
       regexp: 'pam_yubico'
       insertbefore: 'pam_unix'
       line: 'auth requisite pam_yubico.so mode=client try_first_pass id={{ yubico_id }} key={{ yubico_key }}'
-  - lineinfile:
-      name: /etc/sudoers
-      regexp: '^%sudo'
-      line: '%sudo ALL=(ALL) NOPASSWD:ALL'
   - service:
       name: ssh
       state: restarted
