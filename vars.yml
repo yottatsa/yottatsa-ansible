@@ -8,6 +8,7 @@ mail_aliases:
   subscribe: yottatsa+Services
   uk: yottatsa+Services
   us: yottatsa+Services
+  ru: yottatsa+Services
 mail_smime: |
   -----BEGIN CERTIFICATE-----
   MIIFKzCCBBOgAwIBAgIQdhV2Q+g4VzTxlhj/fRdsNjANBgkqhkiG9w0BAQsFADCB
