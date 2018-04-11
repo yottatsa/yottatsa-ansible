@@ -65,7 +65,9 @@
       dest: /root/.ssh/authorized_keys
   - copy:
       content: |
-        root:{{ access_yubikey[0] }}
+        {% for key in access_yubikey %}
+        root:{{ key }}
+        {% endfor %}
       dest: /root/.yubico/authorized_yubikeys
   - copy:
       content: |
